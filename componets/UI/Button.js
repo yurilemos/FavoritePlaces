@@ -1,13 +1,16 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
+
 import { Colors } from "../../constants/colors";
 
 function Button({ onPress, children }) {
-  <Pressable
-    style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-    onPress={onPress}
-  >
-    <Text style={styles.text}>{children}</Text>
-  </Pressable>;
+  return (
+    <Pressable
+      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+      onPress={onPress}
+    >
+      <Text style={styles.text}>{children}</Text>
+    </Pressable>
+  );
 }
 
 export default Button;
