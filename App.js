@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 import AllPlaces from "./screens/AllPlaces";
 import AddPlace from "./screens/AddPlace";
@@ -10,8 +10,12 @@ import IconButton from "./componets/UI/IconButton";
 import { Colors } from "./constants/colors";
 import Map from "./screens/Map";
 import { init } from "./util/database";
+import { View } from "react-native";
 
 const Stack = createNativeStackNavigator();
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -25,12 +29,18 @@ export default function App() {
       });
   }, []);
 
+  const onLayoutRootView = useCallback(async () => {
+    if (dbInitialized) {
+      await SplashScreen.hideAsync();
+    }
+  }, [dbInitialized]);
+
   if (!dbInitialized) {
-    return <AppLoading />;
+    return null;
   }
 
   return (
-    <>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <StatusBar style="dark" />
       <NavigationContainer>
         <Stack.Navigator
@@ -65,6 +75,6 @@ export default function App() {
           <Stack.Screen name="Map" component={Map} />
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </View>
   );
 }
